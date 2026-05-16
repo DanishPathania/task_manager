@@ -1,64 +1,106 @@
-TEAM TASK MANAGER - README
-=========================
+Team Task Manager - Full Stack Web Application
 
-A production-ready Team Task Manager built with the MERN stack. 
-Features JWT authentication, role-based access control, project/task management, 
-dashboard analytics, and a premium interactive UI.
+Project Overview:
+This is a full-stack Team Task Manager application where users can create projects, assign tasks, manage team members, and track task progress with role-based access control.
 
-TECH STACK
-----------
-Frontend: React 18 (Vite), Tailwind CSS 3, Framer Motion, Recharts
-Backend:  Node.js, Express.js, Mongoose (MongoDB)
-Auth:     JWT, bcryptjs
-Forms:    React Hook Form + Yup
+Features:
+- User Authentication (Signup/Login)
+- JWT-based Authorization
+- Role-Based Access (Admin / Member)
+- Create and Manage Projects
+- Task Creation and Assignment
+- Task Status Tracking
+- Dashboard with Task Progress
+- Responsive Design for Mobile and Desktop
+- Protected Routes
+- REST API Integration
 
-PROJECT STRUCTURE
------------------
-team-task-manager/
-├── backend/
-│   ├── src/
-│   │   ├── controllers/    # Auth, Project, Task, User logic
-│   │   ├── models/         # Mongoose schemas
-│   │   ├── routes/         # API endpoints
-│   │   └── middleware/     # Auth and validation guards
-├── frontend/
-│   ├── src/
-│   │   ├── components/     # Reusable UI (CustomSelect, Navbar, etc.)
-│   │   ├── pages/          # App views (Dashboard, Tasks, Projects)
-│   │   └── context/        # Auth state management
+Tech Stack:
 
-QUICK START
------------
-1. Clone the repository
-2. Backend Setup:
-   - cd backend
-   - npm install
-   - Create .env (use MONGO_URI, JWT_SECRET)
-   - npm run dev
-3. Frontend Setup:
-   - cd frontend
-   - npm install
-   - npm run dev
-4. Access app at http://localhost:5173
+Frontend:
+- React.js
+- Tailwind CSS
+- Axios
+- React Router DOM
 
-FEATURES
---------
-- AUTHENTICATION: Secure JWT login/signup with persistent sessions.
-- ROLE-BASED ACCESS: Admin (Full control) vs Member (Assigned tasks only).
-- DASHBOARD: Real-time analytics and project statistics.
-- PREMIUM UI: 
-  * Custom glassmorphic dropdowns and selects.
-  * Modern split-screen Login/Signup pages.
-  * Smooth Framer Motion transitions and background animations.
-- RESPONSIVE DESIGN: Fully optimized for mobile and desktop viewports.
+Backend:
+- Node.js
+- Express.js
 
-API ENDPOINTS (Summary)
------------------------
-AUTH:     POST /api/auth/login, /api/auth/register
-PROJECTS: GET /api/projects, POST /api/projects
-TASKS:    GET /api/tasks, POST /api/tasks
-USERS:    GET /api/users, PUT /api/users/profile
+Database:
+- MongoDB Atlas
 
-LICENSE
--------
-ISC License
+Deployment:
+- Render and Vercel
+
+Roles:
+
+Admin:
+- Create Projects
+- Add or Remove Members
+- Assign Tasks
+- Manage Task Status
+- View Dashboard
+
+Member:
+- View Assigned Tasks
+- Update Task Status
+
+Project Structure:
+
+Frontend:
+- Components
+- Pages
+- Context API
+- API Services
+
+Backend:
+- Routes
+- Controllers
+- Middleware
+- Models
+
+Authentication:
+JWT token authentication is implemented for secure login and protected API access.
+
+Environment Variables:
+
+Frontend:
+VITE_API_URL=https://project-management-app-jtoh.onrender.com/
+
+Backend:
+MONGO_URI=mongodb://ginishsharma2005_db_user:user2005@ac-unz5yqa-shard-00-00.qm5ac4z.mongodb.net:27017,ac-unz5yqa-shard-00-01.qm5ac4z.mongodb.net:27017,ac-unz5yqa-shard-00-02.qm5ac4z.mongodb.net:27017/?ssl=true&replicaSet=atlas-l0408q-shard-0&authSource=admin&appName=Ginish
+
+JWT_SECRET=mysecretkey
+
+PORT=5000
+Installation Steps:
+
+1. Clone the Repository
+2. Install Dependencies
+
+Frontend:
+npm install
+
+Backend:
+npm install
+
+3. Add Environment Variables
+
+4. Run Backend:
+npm run server
+
+5. Run Frontend:
+npm run dev
+
+Deployment:
+Frontend and Backend are deployed on Railway.
+
+GitHub Repository:
+https://github.com/sharmaginish/Project-Management-App/tree/ea2898cfcc1d339c217a322bf47d6863b1597fd3
+
+Live Application:
+https://project-management-app-theta-two.vercel.app/projects
+
+Developer:
+Danish Pathania
