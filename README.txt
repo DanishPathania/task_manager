@@ -65,11 +65,6 @@ JWT token authentication is implemented for secure login and protected API acces
 
 Environment Variables:
 
-Frontend:
-VITE_API_URL=https://project-management-app-jtoh.onrender.com/
-
-Backend:
-MONGO_URI=mongodb://ginishsharma2005_db_user:user2005@ac-unz5yqa-shard-00-00.qm5ac4z.mongodb.net:27017,ac-unz5yqa-shard-00-01.qm5ac4z.mongodb.net:27017,ac-unz5yqa-shard-00-02.qm5ac4z.mongodb.net:27017/?ssl=true&replicaSet=atlas-l0408q-shard-0&authSource=admin&appName=Ginish
 
 JWT_SECRET=mysecretkey
 
@@ -97,7 +92,7 @@ Deployment:
 Frontend and Backend are deployed on Railway.
 
 GitHub Repository:
-https://github.com/sharmaginish/Project-Management-App/tree/ea2898cfcc1d339c217a322bf47d6863b1597fd3
+https://github.com/DanishPathania/project_managment_apps
 
 Live Application:
 https://project-management-app-theta-two.vercel.app/projects
