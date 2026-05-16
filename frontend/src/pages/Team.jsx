@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Search, Users } from 'lucide-react';
+import { Search, Users, Filter } from 'lucide-react';
+import CustomSelect from '../components/CustomSelect';
 import toast from 'react-hot-toast';
 import { getUsers } from '../api/userApi';
 import Loader from '../components/Loader';
@@ -46,11 +47,17 @@ const Team = () => {
           <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-dark-500" />
           <input type="text" placeholder="Search members..." value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }} className="input-field pl-10" />
         </div>
-        <select value={roleFilter} onChange={(e) => { setRoleFilter(e.target.value); setPage(1); }} className="input-field appearance-none cursor-pointer min-w-[140px]">
-          <option value="">All Roles</option>
-          <option value="Admin">Admin</option>
-          <option value="Member">Member</option>
-        </select>
+        <CustomSelect
+          value={roleFilter}
+          onChange={(val) => { setRoleFilter(val); setPage(1); }}
+          options={[
+            { value: '', label: 'All Roles' },
+            { value: 'Admin', label: 'Admin' },
+            { value: 'Member', label: 'Member' },
+          ]}
+          icon={Filter}
+          className="min-w-[150px]"
+        />
       </div>
 
       {loading ? <Loader /> : users.length === 0 ? (

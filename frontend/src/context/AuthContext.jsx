@@ -37,10 +37,7 @@ export const AuthProvider = ({ children }) => {
 
   const register = useCallback(async (userData) => {
     const { data } = await registerUser(userData);
-    localStorage.setItem('token', data.token);
-    localStorage.setItem('user', JSON.stringify(data.data));
-    setUser(data.data);
-    toast.success('Account created successfully!');
+    toast.success('Account created successfully! Please login.');
     return data;
   }, []);
 
@@ -58,6 +55,7 @@ export const AuthProvider = ({ children }) => {
 
   const value = {
     user,
+    setUser,
     loading,
     login,
     register,

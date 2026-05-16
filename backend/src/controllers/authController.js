@@ -48,7 +48,7 @@ export const register = asyncHandler(async (req, res) => {
  * @access  Public
  */
 export const login = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, securityKey } = req.body;
 
   const user = await User.findOne({ email }).select('+password');
   if (!user) {
@@ -58,6 +58,13 @@ export const login = asyncHandler(async (req, res) => {
   const isMatch = await user.comparePassword(password);
   if (!isMatch) {
     throw new ApiError(401, 'Invalid email or password');
+  }
+
+  // Security key check for Admin
+  if (user.role === 'Admin') {
+    if (!securityKey || securityKey !== process.env.ADMIN_SECURITY_KEY) {
+      throw new ApiError(401, 'Invalid admin security key');
+    }
   }
 
   const token = generateToken(user._id);

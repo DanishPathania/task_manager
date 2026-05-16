@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useLocation } from 'react-router-dom';
 import { Plus, Search, Filter, CheckSquare } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import toast from 'react-hot-toast';
@@ -9,6 +10,7 @@ import { getTasks, createTask, deleteTask } from '../api/taskApi';
 import { getProjects } from '../api/projectApi';
 import { getUsers } from '../api/userApi';
 import TaskCard from '../components/TaskCard';
+import CustomSelect from '../components/CustomSelect';
 import Modal from '../components/Modal';
 import ConfirmModal from '../components/ConfirmModal';
 import EmptyState from '../components/EmptyState';
@@ -40,8 +42,17 @@ const Tasks = () => {
   const [creating, setCreating] = useState(false);
   const [projects, setProjects] = useState([]);
   const [users, setUsers] = useState([]);
+  const location = useLocation();
 
-  const { register, handleSubmit, reset, formState: { errors } } = useForm({
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const searchQuery = params.get('search');
+    if (searchQuery) {
+      setSearch(searchQuery);
+    }
+  }, [location.search]);
+
+  const { register, handleSubmit, reset, control, formState: { errors } } = useForm({
     resolver: yupResolver(schema),
     defaultValues: { status: 'Todo', priority: 'Medium' },
   });
@@ -125,19 +136,31 @@ const Tasks = () => {
           <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-dark-500" />
           <input type="text" placeholder="Search tasks..." value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }} className="input-field pl-10" />
         </div>
-        <select value={statusFilter} onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }} className="input-field appearance-none cursor-pointer min-w-[150px]">
-          <option value="">All Statuses</option>
-          <option value="Todo">Todo</option>
-          <option value="In Progress">In Progress</option>
-          <option value="Completed">Completed</option>
-          <option value="Overdue">Overdue</option>
-        </select>
-        <select value={priorityFilter} onChange={(e) => { setPriorityFilter(e.target.value); setPage(1); }} className="input-field appearance-none cursor-pointer min-w-[140px]">
-          <option value="">All Priorities</option>
-          <option value="Low">Low</option>
-          <option value="Medium">Medium</option>
-          <option value="High">High</option>
-        </select>
+        <CustomSelect
+          value={statusFilter}
+          onChange={(val) => { setStatusFilter(val); setPage(1); }}
+          options={[
+            { value: '', label: 'All Statuses' },
+            { value: 'Todo', label: 'Todo' },
+            { value: 'In Progress', label: 'In Progress' },
+            { value: 'Completed', label: 'Completed' },
+            { value: 'Overdue', label: 'Overdue' },
+          ]}
+          icon={Filter}
+          className="min-w-[160px]"
+        />
+        <CustomSelect
+          value={priorityFilter}
+          onChange={(val) => { setPriorityFilter(val); setPage(1); }}
+          options={[
+            { value: '', label: 'All Priorities' },
+            { value: 'Low', label: 'Low' },
+            { value: 'Medium', label: 'Medium' },
+            { value: 'High', label: 'High' },
+          ]}
+          icon={Filter}
+          className="min-w-[160px]"
+        />
       </div>
 
       {loading ? <Loader /> : tasks.length === 0 ? (
@@ -171,38 +194,74 @@ const Tasks = () => {
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-dark-300 mb-1">Assign To</label>
-              <select {...register('assignedTo')} className="input-field appearance-none cursor-pointer">
-                <option value="">Select User</option>
-                {users.map((u) => <option key={u._id} value={u._id}>{u.name}</option>)}
-              </select>
-              {errors.assignedTo && <p className="text-red-400 text-xs mt-1">{errors.assignedTo.message}</p>}
+              <Controller
+                name="assignedTo"
+                control={control}
+                render={({ field }) => (
+                  <CustomSelect
+                    label="Assign To"
+                    value={field.value}
+                    onChange={field.onChange}
+                    placeholder="Select User"
+                    options={users.map(u => ({ value: u._id, label: u.name }))}
+                    error={errors.assignedTo?.message}
+                  />
+                )}
+              />
             </div>
             <div>
-              <label className="block text-sm font-medium text-dark-300 mb-1">Project</label>
-              <select {...register('project')} className="input-field appearance-none cursor-pointer">
-                <option value="">Select Project</option>
-                {projects.map((p) => <option key={p._id} value={p._id}>{p.title}</option>)}
-              </select>
-              {errors.project && <p className="text-red-400 text-xs mt-1">{errors.project.message}</p>}
+              <Controller
+                name="project"
+                control={control}
+                render={({ field }) => (
+                  <CustomSelect
+                    label="Project"
+                    value={field.value}
+                    onChange={field.onChange}
+                    placeholder="Select Project"
+                    options={projects.map(p => ({ value: p._id, label: p.title }))}
+                    error={errors.project?.message}
+                  />
+                )}
+              />
             </div>
           </div>
           <div className="grid grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-medium text-dark-300 mb-1">Priority</label>
-              <select {...register('priority')} className="input-field appearance-none cursor-pointer">
-                <option value="Low">Low</option>
-                <option value="Medium">Medium</option>
-                <option value="High">High</option>
-              </select>
+              <Controller
+                name="priority"
+                control={control}
+                render={({ field }) => (
+                  <CustomSelect
+                    label="Priority"
+                    value={field.value}
+                    onChange={field.onChange}
+                    options={[
+                      { value: 'Low', label: 'Low' },
+                      { value: 'Medium', label: 'Medium' },
+                      { value: 'High', label: 'High' },
+                    ]}
+                  />
+                )}
+              />
             </div>
             <div>
-              <label className="block text-sm font-medium text-dark-300 mb-1">Status</label>
-              <select {...register('status')} className="input-field appearance-none cursor-pointer">
-                <option value="Todo">Todo</option>
-                <option value="In Progress">In Progress</option>
-                <option value="Completed">Completed</option>
-              </select>
+              <Controller
+                name="status"
+                control={control}
+                render={({ field }) => (
+                  <CustomSelect
+                    label="Status"
+                    value={field.value}
+                    onChange={field.onChange}
+                    options={[
+                      { value: 'Todo', label: 'Todo' },
+                      { value: 'In Progress', label: 'In Progress' },
+                      { value: 'Completed', label: 'Completed' },
+                    ]}
+                  />
+                )}
+              />
             </div>
             <div>
               <label className="block text-sm font-medium text-dark-300 mb-1">Due Date</label>

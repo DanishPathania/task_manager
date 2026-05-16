@@ -10,6 +10,7 @@ import Tasks from '../pages/Tasks';
 import TaskDetails from '../pages/TaskDetails';
 import Team from '../pages/Team';
 import Profile from '../pages/Profile';
+import Users from '../pages/Users';
 import NotFound from '../pages/NotFound';
 
 const AppRoutes = () => {
@@ -34,6 +35,14 @@ const AppRoutes = () => {
         <Route path="/tasks/:id" element={<TaskDetails />} />
         <Route path="/team" element={<Team />} />
         <Route path="/profile" element={<Profile />} />
+        <Route 
+          path="/users" 
+          element={
+            <ProtectedRoute roles={['Admin']}>
+              <Users />
+            </ProtectedRoute>
+          } 
+        />
       </Route>
 
       {/* Redirects and fallback */}

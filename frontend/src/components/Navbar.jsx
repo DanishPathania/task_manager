@@ -52,15 +52,6 @@ const Navbar = ({ onMenuToggle }) => {
         >
           <Menu className="w-5 h-5" />
         </button>
-
-        <div className="relative hidden sm:block">
-          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-dark-500" />
-          <input
-            type="text"
-            placeholder="Search..."
-            className="bg-dark-800/50 border border-dark-700/50 rounded-xl pl-10 pr-4 py-2 text-sm text-dark-200 placeholder-dark-500 focus:outline-none focus:border-primary-500/50 w-64 transition-colors"
-          />
-        </div>
       </div>
 
       {/* Right — Notifications + User */}
@@ -138,8 +129,12 @@ const Navbar = ({ onMenuToggle }) => {
             className="flex items-center gap-3 p-1.5 rounded-xl hover:bg-dark-800/50 transition-colors"
             id="user-dropdown-toggle"
           >
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center text-white text-xs font-bold">
-              {getInitials(user?.name)}
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center text-white text-xs font-bold overflow-hidden border border-white/10">
+              {user?.avatar ? (
+                <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+              ) : (
+                getInitials(user?.name)
+              )}
             </div>
             <div className="hidden md:block text-left">
               <p className="text-sm font-medium text-dark-200">{user?.name}</p>

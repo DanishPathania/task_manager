@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Plus, Search, Filter, FolderKanban } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import toast from 'react-hot-toast';
 import { getProjects, createProject, deleteProject } from '../api/projectApi';
 import { getUsers } from '../api/userApi';
 import ProjectCard from '../components/ProjectCard';
+import CustomSelect from '../components/CustomSelect';
 import Modal from '../components/Modal';
 import ConfirmModal from '../components/ConfirmModal';
 import EmptyState from '../components/EmptyState';
@@ -36,7 +37,7 @@ const Projects = () => {
   const [selectedMembers, setSelectedMembers] = useState([]);
   const [creating, setCreating] = useState(false);
 
-  const { register, handleSubmit, reset, formState: { errors } } = useForm({
+  const { register, handleSubmit, reset, control, formState: { errors } } = useForm({
     resolver: yupResolver(schema),
     defaultValues: { status: 'Active' },
   });
@@ -135,19 +136,18 @@ const Projects = () => {
             className="input-field pl-10"
           />
         </div>
-        <div className="relative">
-          <Filter className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-dark-500" />
-          <select
-            value={statusFilter}
-            onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
-            className="input-field pl-10 pr-8 appearance-none cursor-pointer min-w-[160px]"
-          >
-            <option value="">All Statuses</option>
-            <option value="Active">Active</option>
-            <option value="Completed">Completed</option>
-            <option value="On Hold">On Hold</option>
-          </select>
-        </div>
+        <CustomSelect
+          value={statusFilter}
+          onChange={(val) => { setStatusFilter(val); setPage(1); }}
+          options={[
+            { value: '', label: 'All Statuses' },
+            { value: 'Active', label: 'Active' },
+            { value: 'Completed', label: 'Completed' },
+            { value: 'On Hold', label: 'On Hold' },
+          ]}
+          icon={Filter}
+          className="min-w-[180px]"
+        />
       </div>
 
       {/* Project grid */}
@@ -205,12 +205,22 @@ const Projects = () => {
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-dark-300 mb-1">Status</label>
-              <select {...register('status')} className="input-field appearance-none cursor-pointer">
-                <option value="Active">Active</option>
-                <option value="Completed">Completed</option>
-                <option value="On Hold">On Hold</option>
-              </select>
+              <Controller
+                name="status"
+                control={control}
+                render={({ field }) => (
+                  <CustomSelect
+                    label="Status"
+                    value={field.value}
+                    onChange={field.onChange}
+                    options={[
+                      { value: 'Active', label: 'Active' },
+                      { value: 'Completed', label: 'Completed' },
+                      { value: 'On Hold', label: 'On Hold' },
+                    ]}
+                  />
+                )}
+              />
             </div>
             <div>
               <label className="block text-sm font-medium text-dark-300 mb-1">Due Date</label>

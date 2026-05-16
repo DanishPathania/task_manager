@@ -9,6 +9,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Navigation,
+  ShieldCheck,
 } from 'lucide-react';
 import useAuth from '../hooks/useAuth';
 
@@ -18,6 +19,7 @@ const navItems = [
   { path: '/tasks', label: 'Tasks', icon: CheckSquare },
   { path: '/team', label: 'Team', icon: Users },
   { path: '/profile', label: 'Profile', icon: User },
+  { path: '/users', label: 'Manage Users', icon: ShieldCheck, adminOnly: true },
 ];
 
 const Sidebar = ({ collapsed, setCollapsed }) => {
@@ -51,7 +53,9 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
 
       {/* Navigation */}
       <nav className="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
-        {navItems.map(({ path, label, icon: Icon }) => (
+        {navItems
+          .filter(item => !item.adminOnly || user?.role === 'Admin')
+          .map(({ path, label, icon: Icon }) => (
           <NavLink
             key={path}
             to={path}
@@ -83,8 +87,12 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
       {/* User info */}
       <div className="p-3 border-t border-dark-700/50">
         <div className="flex items-center gap-3 px-3 py-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center flex-shrink-0 text-white text-xs font-bold">
-            {user?.name?.charAt(0).toUpperCase()}
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center flex-shrink-0 text-white text-xs font-bold overflow-hidden border border-white/10">
+            {user?.avatar ? (
+              <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+            ) : (
+              user?.name?.charAt(0).toUpperCase()
+            )}
           </div>
           <AnimatePresence>
             {!collapsed && (
